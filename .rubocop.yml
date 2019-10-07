@@ -1,0 +1,41 @@
+require:
+  - rubocop-performance
+  - rubocop-rspec
+
+AllCops:
+  # Include:
+  #   - rubocop-performance
+  #   - rubocop-rspec
+
+  TargetRubyVersion: 2.6
+
+  # チェック対象外
+  # Exclude:
+  #   - vendor/**/*
+
+# コメントはASCII文字で記述 => disable
+Style/AsciiComments:
+  Enabled: false
+
+# ['a', 'b', 'c'] は %w表記にて記述 => disable
+Style/WordArray:
+  Enabled: false
+
+# [:a, :b, :c] は %i表記にて記述 => disable
+Style/SymbolArray:
+  Enabled: false
+
+# Style/Documentation:
+#   Exclude:
+#     - spec/**/*
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+
+# Metrics/LineLength:
+#   Exclude:
+#     - spec/**/*
+
+# RSpec/ContextWording:
+#   Enabled: false
