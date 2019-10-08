@@ -25,7 +25,7 @@ bundle exec rspec
 ```
 
 ```sh
-bundle exec pry -r './heap_object.rb'
+bundle exec pry -r './src/heap_object.rb'
 ```
 
 ```ruby

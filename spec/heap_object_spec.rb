@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'benchmark'
-require_relative '../heap_object.rb'
+require_relative '../src/heap_object.rb'
 
 RSpec.describe Heap do
   describe '#push #pop' do
@@ -181,8 +181,8 @@ RSpec.configure do |config|
   config.after(:suite) do
     puts ''
     Benchmark.bm(12) do |x|
-      x.report('sort[200000]') do
-        count = 200_000
+      x.report('sort[100000]') do
+        count = 100_000
         data = Array.new(count) { rand(count) }
         Heap.new.push(*data).to_a!
       end
