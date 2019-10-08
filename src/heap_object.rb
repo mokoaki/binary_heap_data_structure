@@ -64,7 +64,7 @@ class Heap
 
     child_index = target_child_index(parent_index)
 
-    return if @block.call(@heap[parent_index], @heap[child_index])
+    return unless @block.call(@heap[child_index], @heap[parent_index])
 
     swap(parent_index, child_index)
     heapify_up((parent_index - 1) / 2)
@@ -74,7 +74,7 @@ class Heap
     child_index = target_child_index(parent_index)
 
     return if child_index.nil?
-    return if @block.call(@heap[parent_index], @heap[child_index])
+    return unless @block.call(@heap[child_index], @heap[parent_index])
 
     swap(parent_index, child_index)
     heapify_down(child_index)
