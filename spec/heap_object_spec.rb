@@ -17,8 +17,8 @@ RSpec.describe Heap do
     end
 
     it 'push(2) push(3) push(1) pop(1) pop(2) pop(3)' do
-      heap.push(2)
       heap.push(3)
+      heap.push(2)
       heap.push(1)
       expect(heap.pop).to eq(1)
       expect(heap.pop).to eq(2)
@@ -26,9 +26,9 @@ RSpec.describe Heap do
     end
 
     it 'push(2) push(1) push(3) pop(1) pop(2) pop(3)' do
-      heap.push(2)
-      heap.push(1)
       heap.push(3)
+      heap.push(1)
+      heap.push(2)
       expect(heap.pop).to eq(1)
       expect(heap.pop).to eq(2)
       expect(heap.pop).to eq(3)
@@ -42,7 +42,7 @@ RSpec.describe Heap do
     end
 
     it 'push(3, 2, 1) pop(1) pop(2) pop(3)' do
-      heap.push(3, 2, 1)
+      heap.push(2, 3, 1)
       expect(heap.pop).to eq(1)
       expect(heap.pop).to eq(2)
       expect(heap.pop).to eq(3)

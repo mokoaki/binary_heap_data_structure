@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-#      0
-#   1     2
-#  3 4   5 6
-
 # ヒープ構造を作るオブジェクト
 class Heap
   def initialize(*items, &block)
@@ -31,6 +27,10 @@ class Heap
 
   def size
     @heap.size
+  end
+
+  def to_a
+    dup.to_a!
   end
 
   def to_a!
@@ -84,5 +84,10 @@ class Heap
     proc do |a, b|
       a < b
     end
+  end
+
+  # dup時に呼ばれ、インスタンス変数をクローンする
+  def initialize_copy(heap)
+    @heap = heap.instance_variable_get(:@heap).dup
   end
 end
