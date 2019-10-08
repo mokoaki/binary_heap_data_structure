@@ -180,9 +180,9 @@ end
 RSpec.configure do |config|
   config.after(:suite) do
     puts ''
-    Benchmark.bm(12) do |x|
-      x.report('sort[100000]') do
-        count = 100_000
+    Benchmark.bm(11) do |x|
+      x.report('sort[10000]') do
+        count = 10_000
         data = Array.new(count) { rand(count) }
         Heap.new.push(*data).to_a!
       end
