@@ -39,7 +39,7 @@ class Heap
 
   private
 
-  def min_child_index(parent_index)
+  def target_child_index(parent_index)
     left_child_index = parent_index * 2 + 1
     return nil if (size - 1) < left_child_index
 
@@ -62,7 +62,7 @@ class Heap
   def heapify_up(parent_index)
     return if parent_index.negative?
 
-    child_index = min_child_index(parent_index)
+    child_index = target_child_index(parent_index)
 
     return if @block.call(@heap[parent_index], @heap[child_index])
 
@@ -71,7 +71,7 @@ class Heap
   end
 
   def heapify_down(parent_index)
-    child_index = min_child_index(parent_index)
+    child_index = target_child_index(parent_index)
 
     return if child_index.nil?
     return if @block.call(@heap[parent_index], @heap[child_index])
