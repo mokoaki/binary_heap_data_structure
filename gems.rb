@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'pry'
+gem 'pry', require: false
 gem 'rspec', require: false
 gem 'rubocop', require: false
 gem 'rubocop-performance', require: false

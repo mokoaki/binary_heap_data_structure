@@ -3,15 +3,11 @@ require:
   - rubocop-rspec
 
 AllCops:
-  # Include:
-  #   - rubocop-performance
-  #   - rubocop-rspec
-
   TargetRubyVersion: 2.6
 
   # チェック対象外
-  # Exclude:
-  #   - vendor/**/*
+  Exclude:
+    - .bundle/**/*
 
 # コメントはASCII文字で記述 => disable
 Style/AsciiComments:

@@ -13,6 +13,8 @@
 
 ## とりあえずバイナリヒープ
 
+ちょっと残念、安定ソートではない
+
 ### 基本的なバイナリヒープぽい動きをするオブジェクトを実装して遊ぶ
 
 ```sh
@@ -23,25 +25,21 @@ bundle exec rspec
 ```
 
 ```sh
-irb -r ./heap_object.rb
+bundle exec pry -r './heap_object.rb'
 ```
 
 ```ruby
-heap = Heap.new
-heap.push(2)
-heap.push(3)
-heap.push(1)
-heap.push(4)
+heap = Heap.new(7, 2)
+heap.push(6)
+heap.push(3).push(5)
+heap.push(4, 1)
 
 heap.pop
 # => 1
 heap.pop
 # => 2
-heap.to_a!
-# => [3, 4]
-
-Heap.new(9,2,8,3,7,4,7,-6,-8).to_a!
-# => [-8, -6, 2, 3, 4, 7, 7, 8, 9]
+heap.to_a
+# => [3, 4, 5, 6, 7]
 ```
 
 ### ヒープソートの実装

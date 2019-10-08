@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# require 'spec_helper'
+require 'benchmark'
 require_relative '../heap_object.rb'
 
 RSpec.describe Heap do
@@ -172,8 +172,20 @@ RSpec.describe Heap do
     it 'いっぱい' do
       data = Array.new(500) { rand(200) }
       heap = described_class.new(*data)
-      heap.push(10, 1)
       expect(heap.to_a!.each_cons(2)).to be_all { |a, b| a <= b }
+    end
+  end
+end
+
+RSpec.configure do |config|
+  config.after(:suite) do
+    puts ''
+    Benchmark.bm(12) do |x|
+      x.report('sort[200000]') do
+        count = 200_000
+        data = Array.new(count) { rand(count) }
+        Heap.new.push(*data).to_a!
+      end
     end
   end
 end
