@@ -133,24 +133,24 @@ RSpec.describe Heap do
     end
   end
 
-  describe '#pop_all!' do
-    it 'new(2, 3, 1) push(5, 6, 4) pop_all!(1, 2, 3)' do
+  describe '#pop_all' do
+    it 'new(2, 3, 1) push(5, 6, 4) pop_all(1, 2, 3)' do
       heap = described_class.new(2, 3, 1)
       heap.push(5, 6, 4)
-      expect(heap.pop_all!).to eq([1, 2, 3, 4, 5, 6])
+      expect(heap.pop_all).to eq([1, 2, 3, 4, 5, 6])
     end
   end
 
   describe '#push method chaining' do
-    it 'new(2).push(3, 1) pop_all!' do
+    it 'new(2).push(3, 1) pop_all' do
       heap = described_class.new(2).push(3, 1)
-      expect(heap.pop_all!).to eq([1, 2, 3])
+      expect(heap.pop_all).to eq([1, 2, 3])
     end
 
-    it 'push(2).push(3, 1) pop_all!' do
+    it 'push(2).push(3, 1) pop_all' do
       heap = described_class.new
       heap.push(2).push(3, 1)
-      expect(heap.pop_all!).to eq([1, 2, 3])
+      expect(heap.pop_all).to eq([1, 2, 3])
     end
   end
 
@@ -158,13 +158,13 @@ RSpec.describe Heap do
     it '降順' do
       heap = described_class.new { |a, b| a > b }
       heap.push(2, 3, 1)
-      expect(heap.pop_all!).to eq([3, 2, 1])
+      expect(heap.pop_all).to eq([3, 2, 1])
     end
 
     it 'メソッドの戻り値とかでソート' do
       heap = described_class.new { |a, b| a.size > b.size }
       heap.push('333', '1', '4444', '22')
-      expect(heap.pop_all!).to eq(['4444', '333', '22', '1'])
+      expect(heap.pop_all).to eq(['4444', '333', '22', '1'])
     end
   end
 
@@ -172,7 +172,7 @@ RSpec.describe Heap do
     it 'いっぱい' do
       data = Array.new(500) { rand(200) }
       heap = described_class.new(*data)
-      expect(heap.pop_all!.each_cons(2)).to be_all { |a, b| a <= b }
+      expect(heap.pop_all.each_cons(2)).to be_all { |a, b| a <= b }
     end
   end
 end
@@ -184,7 +184,7 @@ RSpec.configure do |config|
       x.report('sort[10000]') do
         count = 100_000
         data = Array.new(count) { rand(count) }
-        Heap.new.push(*data).pop_all!
+        Heap.new.push(*data).pop_all
       end
     end
   end

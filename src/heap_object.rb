@@ -34,12 +34,12 @@ class Heap
     @heap.size
   end
 
-  def to_a
-    dup.pop_all!
+  def pop_all
+    pop(size)
   end
 
-  def pop_all!
-    pop(size)
+  def to_a
+    dup.pop_all
   end
 
   private
