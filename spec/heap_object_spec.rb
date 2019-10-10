@@ -110,6 +110,22 @@ RSpec.describe Heap do
   end
 
   describe 'pop_all' do
+    it 'first size' do
+      expect(heap.size).to eq(0)
+    end
+
+    it 'push(1) size' do
+      heap.push(1)
+      expect(heap.size).to eq(1)
+    end
+
+    it 'push(1, 2) size' do
+      heap.push(1, 2)
+      expect(heap.size).to eq(2)
+    end
+  end
+
+  describe 'pop_all' do
     it 'push(2, 3, 1) pop_all' do
       heap.push(2, 3, 1)
       expect(heap.pop_all).to eq([1, 2, 3])
@@ -158,7 +174,7 @@ end
 RSpec.configure do |config|
   config.after(:suite) do
     puts ''
-    COUNT = 5_000
+    COUNT = 10_000
     items = Array.new(COUNT) { rand(COUNT) }
     pushed_heap = Heap.new.push(*items)
 

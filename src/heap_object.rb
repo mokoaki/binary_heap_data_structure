@@ -24,7 +24,7 @@ class Heap
     block = @block
 
     results = Array.new([num, size].min) do
-      swap(heap, 0, -1)
+      heap[0], heap[-1] = heap[-1], heap[0]
       result = heap.pop
       heapify_down(heap, 0, heap.size - 1, block)
       result
@@ -49,18 +49,18 @@ class Heap
 
   private
 
-  def swap(heap, index1, index2)
-    heap[index1], heap[index2] = heap[index2], heap[index1]
-  end
-
   def heapify_up(heap, parent_index, heap_limit, block)
     return if parent_index.negative?
 
     child_index = target_child_index(heap, parent_index, heap_limit, block)
+    parent_value = heap[parent_index]
+    child_value = heap[child_index]
 
-    return unless block.call(heap[child_index], heap[parent_index])
+    return unless block.call(child_value, parent_value)
 
-    swap(heap, parent_index, child_index)
+    heap[parent_index] = child_value
+    heap[child_index] = parent_value
+
     heapify_up(heap, (parent_index - 1) / 2, heap_limit, block)
   end
 
@@ -68,9 +68,15 @@ class Heap
     child_index = target_child_index(heap, parent_index, heap_limit, block)
 
     return if child_index.nil?
-    return unless block.call(heap[child_index], heap[parent_index])
 
-    swap(heap, parent_index, child_index)
+    parent_value = heap[parent_index]
+    child_value = heap[child_index]
+
+    return unless block.call(child_value, parent_value)
+
+    heap[parent_index] = child_value
+    heap[child_index] = parent_value
+
     heapify_down(heap, child_index, heap_limit, block)
   end
 
