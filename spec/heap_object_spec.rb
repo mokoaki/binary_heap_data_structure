@@ -4,175 +4,153 @@ require 'benchmark'
 require_relative '../src/heap_object.rb'
 
 RSpec.describe Heap do
-  describe '#push #pop' do
-    let(:heap) { described_class.new }
+  let(:heap) { described_class.new }
 
-    it 'push(1) push(2) push(3) pop(1) pop(2) pop(3)' do
+  describe 'push pop' do
+    it 'first pop' do
+      expect(heap.pop).to eq(nil)
+    end
+
+    it 'push(1) pop' do
+      heap.push(1)
+      expect(heap.pop).to eq(1)
+    end
+
+    it 'push(2) pop' do
+      heap.push(2)
+      expect(heap.pop).to eq(2)
+    end
+
+    it 'push(1) push(2) pop pop' do
+      heap.push(1)
+      heap.push(2)
+      expect([heap.pop, heap.pop]).to eq([1, 2])
+    end
+
+    it 'push(2) push(1) pop pop' do
+      heap.push(2)
+      heap.push(1)
+      expect([heap.pop, heap.pop]).to eq([1, 2])
+    end
+
+    it 'push(1) push(2) push(3) pop pop pop' do
       heap.push(1)
       heap.push(2)
       heap.push(3)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
+      expect([heap.pop, heap.pop, heap.pop]).to eq([1, 2, 3])
     end
 
-    it 'push(2) push(3) push(1) pop(1) pop(2) pop(3)' do
-      heap.push(3)
+    it 'push(2) push(3) push(1) pop pop pop' do
       heap.push(2)
-      heap.push(1)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
-    end
-
-    it 'push(2) push(1) push(3) pop(1) pop(2) pop(3)' do
       heap.push(3)
       heap.push(1)
-      heap.push(2)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
+      expect([heap.pop, heap.pop, heap.pop]).to eq([1, 2, 3])
     end
 
-    it 'push(1, 2, 3) pop(1) pop(2) pop(3)' do
+    it 'push(1).push(2).push(3) pop pop pop' do
+      heap.push(1).push(2).push(3)
+      expect([heap.pop, heap.pop, heap.pop]).to eq([1, 2, 3])
+    end
+
+    it 'push(2).push(3).push(1) pop pop pop' do
+      heap.push(2).push(3).push(1)
+      expect([heap.pop, heap.pop, heap.pop]).to eq([1, 2, 3])
+    end
+  end
+
+  describe 'push(*) pop pop pop' do
+    it 'push(1, 2 ,3) pop' do
       heap.push(1, 2, 3)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
+      expect([heap.pop, heap.pop, heap.pop]).to eq([1, 2, 3])
     end
 
-    it 'push(3, 2, 1) pop(1) pop(2) pop(3)' do
+    it 'push(2, 3 ,1) pop pop pop' do
       heap.push(2, 3, 1)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
-    end
-
-    it 'push(2, 3) push(1) pop(1) pop(2) pop(3)' do
-      heap.push(2, 3)
-      heap.push(1)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
-    end
-
-    it 'push(2, 3) push(4, 1) pop(1) pop(2) pop(3)' do
-      heap.push(2, 3)
-      heap.push(4, 1)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
-      expect(heap.pop).to eq(4)
+      expect([heap.pop, heap.pop, heap.pop]).to eq([1, 2, 3])
     end
   end
 
-  describe '#new #pop' do
-    it 'new(1) push(2) push(3) pop(1) pop(2) pop(3)' do
-      heap = described_class.new(1)
-      heap.push(2)
-      heap.push(3)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
+  describe 'push(*) pop' do
+    it 'push(1, 2 ,3) pop pop pop' do
+      heap.push(1, 2, 3)
+      expect([heap.pop, heap.pop, heap.pop]).to eq([1, 2, 3])
     end
 
-    it 'new(2) push(3) push(1) pop(1) pop(2) pop(3)' do
-      heap = described_class.new(2)
-      heap.push(3)
-      heap.push(1)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
-    end
-
-    it 'new(2) push(1) push(3) pop(1) pop(2) pop(3)' do
-      heap = described_class.new(2)
-      heap.push(1)
-      heap.push(3)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
-    end
-
-    it 'new(1, 2, 3) pop(1) pop(2) pop(3)' do
-      heap = described_class.new(1, 2, 3)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
-    end
-
-    it 'new(3, 2, 1) pop(1) pop(2) pop(3)' do
-      heap = described_class.new(3, 2, 1)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
-    end
-
-    it 'new(2, 3, 1) pop(1) pop(2) pop(3)' do
-      heap = described_class.new(2, 3, 1)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
-    end
-
-    it 'new(2, 3) push(1) pop(1) pop(2) pop(3)' do
-      heap = described_class.new(2, 3)
-      heap.push(1)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
-    end
-
-    it 'new(2, 3) push(4, 1) pop(1) pop(2) pop(3)' do
-      heap = described_class.new(2, 3)
-      heap.push(4, 1)
-      expect(heap.pop).to eq(1)
-      expect(heap.pop).to eq(2)
-      expect(heap.pop).to eq(3)
-      expect(heap.pop).to eq(4)
+    it 'push(2, 3 ,1) pop pop pop' do
+      heap.push(2, 3, 1)
+      expect([heap.pop, heap.pop, heap.pop]).to eq([1, 2, 3])
     end
   end
 
-  describe '#pop_all' do
-    it 'new(2, 3, 1) push(5, 6, 4) pop_all(1, 2, 3)' do
-      heap = described_class.new(2, 3, 1)
-      heap.push(5, 6, 4)
-      expect(heap.pop_all).to eq([1, 2, 3, 4, 5, 6])
+  describe 'pop(num)' do
+    it 'push(2, 3, 1) pop(0)' do
+      heap.push(2, 3, 1)
+      expect(heap.pop(0)).to be_nil
+    end
+
+    it 'push(2, 3, 1) pop(1)' do
+      heap.push(2, 3, 1)
+      expect(heap.pop(1)).to eq(1)
+    end
+
+    it 'push(2, 3 ,1) pop(2)' do
+      heap.push(2, 3, 1)
+      expect(heap.pop(2)).to eq([1, 2])
+    end
+
+    it 'push(2, 3 ,1) pop(3)' do
+      heap.push(2, 3, 1)
+      expect(heap.pop(3)).to eq([1, 2, 3])
+    end
+
+    it 'push(2, 3 ,1) pop(4)' do
+      heap.push(2, 3, 1)
+      expect(heap.pop(4)).to eq([1, 2, 3])
     end
   end
 
-  describe '#push method chaining' do
-    it 'new(2).push(3, 1) pop_all' do
-      heap = described_class.new(2).push(3, 1)
+  describe 'pop_all' do
+    it 'push(2, 3, 1) pop_all' do
+      heap.push(2, 3, 1)
       expect(heap.pop_all).to eq([1, 2, 3])
     end
 
-    it 'push(2).push(3, 1) pop_all' do
-      heap = described_class.new
-      heap.push(2).push(3, 1)
-      expect(heap.pop_all).to eq([1, 2, 3])
+    it 'push(2, 3, 1) pop_all pop_all' do
+      heap.push(2, 3, 1)
+      expect([heap.pop_all, heap.pop_all]).to eq([[1, 2, 3], nil])
     end
   end
 
-  context 'setting sort' do
-    it '降順' do
+  describe 'to_a' do
+    it 'push(2, 3, 1) to_a' do
+      heap.push(2, 3, 1)
+      expect(heap.to_a).to eq([1, 2, 3])
+    end
+
+    it 'push(2, 3, 1) to_a to_a' do
+      heap.push(2, 3, 1)
+      expect([heap.to_a, heap.to_a]).to eq([[1, 2, 3], [1, 2, 3]])
+    end
+  end
+
+  describe 'comparison block' do
+    it '降順で' do
       heap = described_class.new { |a, b| a > b }
       heap.push(2, 3, 1)
-      expect(heap.pop_all).to eq([3, 2, 1])
+      expect(heap.to_a).to eq([3, 2, 1])
     end
 
-    it 'メソッドの戻り値とかでソート' do
-      heap = described_class.new { |a, b| a.size > b.size }
-      heap.push('333', '1', '4444', '22')
-      expect(heap.pop_all).to eq(['4444', '333', '22', '1'])
+    it '適当なメソッド結果で' do
+      heap = described_class.new { |a, b| a.size < b.size }
+      heap.push('aa', 'aaaa', 'a', 'aaa')
+      expect(heap.to_a).to eq(['a', 'aa', 'aaa', 'aaaa'])
     end
   end
 
-  context 'いっぱい' do
+  context 'with いっぱい' do
     it 'いっぱい' do
-      data = Array.new(500) { rand(200) }
-      heap = described_class.new(*data)
-      expect(heap.pop_all.each_cons(2)).to be_all { |a, b| a <= b }
+      500.times { heap.push(rand(100)) }
+      expect(heap.pop_all.each_cons(2).all? { |a, b| a <= b }).to be true
     end
   end
 end
@@ -180,11 +158,34 @@ end
 RSpec.configure do |config|
   config.after(:suite) do
     puts ''
-    Benchmark.bm(11) do |x|
-      x.report('sort[10000]') do
-        count = 100_000
-        data = Array.new(count) { rand(count) }
-        Heap.new.push(*data).pop_all
+    COUNT = 5_000
+    items = Array.new(COUNT) { rand(COUNT) }
+    pushed_heap = Heap.new.push(*items)
+
+    Benchmark.bm(8) do |x|
+      heap = Heap.new
+      x.report('push * n') do
+        items.each { |item| heap.push(item) }
+      end
+
+      heap = Heap.new
+      x.report('push(*n)') do
+        heap.push(*items)
+      end
+
+      heap = pushed_heap.dup
+      x.report('pop * n') do
+        COUNT.times { heap.pop }
+      end
+
+      heap = pushed_heap.dup
+      x.report('pop_all') do
+        heap.pop_all
+      end
+
+      heap = pushed_heap.dup
+      x.report('to_a') do
+        heap.to_a
       end
     end
   end

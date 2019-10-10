@@ -2,30 +2,35 @@
 
 # ヒープ構造を作るオブジェクト
 class Heap
-  def initialize(*items, &block)
+  def initialize(&block)
     @heap = []
     @block = block || default_block
-    push(*items)
   end
 
   def push(*items)
+    heap = @heap
+    block = @block
+
     items.each.with_index(size - 1) do |item, pushed_index|
-      @heap.push(item)
-      heapify_up(pushed_index / 2)
+      heap.push(item)
+      heapify_up(heap, pushed_index / 2, heap.size - 1, block)
     end
 
     self
   end
 
-  def pop(count = 1)
-    results = Array.new(count) do
-      swap(0, -1)
-      result = @heap.pop
-      heapify_down(0)
+  def pop(num = 1)
+    heap = @heap
+    block = @block
+
+    results = Array.new([num, size].min) do
+      swap(heap, 0, -1)
+      result = heap.pop
+      heapify_down(heap, 0, heap.size - 1, block)
       result
     end
 
-    return results.first if results.size == 1
+    return results.first if num < 2
 
     results
   end
@@ -44,47 +49,43 @@ class Heap
 
   private
 
-  def swap(index1, index2)
-    @heap[index1], @heap[index2] = @heap[index2], @heap[index1]
+  def swap(heap, index1, index2)
+    heap[index1], heap[index2] = heap[index2], heap[index1]
   end
 
-  def heapify_up(parent_index)
+  def heapify_up(heap, parent_index, heap_limit, block)
     return if parent_index.negative?
 
-    child_index = target_child_index(parent_index)
+    child_index = target_child_index(heap, parent_index, heap_limit, block)
 
-    return unless @block.call(@heap[child_index], @heap[parent_index])
+    return unless block.call(heap[child_index], heap[parent_index])
 
-    swap(parent_index, child_index)
-    heapify_up((parent_index - 1) / 2)
+    swap(heap, parent_index, child_index)
+    heapify_up(heap, (parent_index - 1) / 2, heap_limit, block)
   end
 
-  def heapify_down(parent_index)
-    child_index = target_child_index(parent_index)
+  def heapify_down(heap, parent_index, heap_limit, block)
+    child_index = target_child_index(heap, parent_index, heap_limit, block)
 
     return if child_index.nil?
-    return unless @block.call(@heap[child_index], @heap[parent_index])
+    return unless block.call(heap[child_index], heap[parent_index])
 
-    swap(parent_index, child_index)
-    heapify_down(child_index)
+    swap(heap, parent_index, child_index)
+    heapify_down(heap, child_index, heap_limit, block)
   end
 
-  def target_child_index(parent_index)
-    heap_limit = size - 1
-
+  def target_child_index(heap, parent_index, heap_limit, block)
     left_child_index = parent_index * 2 + 1
     return nil if heap_limit < left_child_index
-
-    left_child_value = @heap[left_child_index]
 
     right_child_index = left_child_index + 1
     return left_child_index if heap_limit < right_child_index
 
-    right_child_value = @heap[right_child_index]
-
-    return left_child_index if @block.call(left_child_value, right_child_value)
-
-    right_child_index
+    if block.call(heap[left_child_index], heap[right_child_index])
+      left_child_index
+    else
+      right_child_index
+    end
   end
 
   def default_block
