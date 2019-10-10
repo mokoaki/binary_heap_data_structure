@@ -9,12 +9,12 @@ class Array
     block ||= default_block
 
     ((size - 2) / 2).downto(0) do |parent_index|
-      heapify_down(parent_index, self.size, block)
+      heapify_down(parent_index, size - 1, block)
     end
 
-    (size - 1).downto(1) do |heap_end|
-      self[0], self[heap_end] = self[heap_end], self[0]
-      heapify_down(0, heap_end, block)
+    (size - 1).downto(1) do |heap_limit|
+      self[0], self[heap_limit] = self[heap_limit], self[0]
+      heapify_down(0, heap_limit, block)
     end
 
     self
@@ -22,8 +22,8 @@ class Array
 
   private
 
-  def heapify_down(parent_index, heap_end, block)
-    child_index = target_child_index(parent_index, heap_end, block)
+  def heapify_down(parent_index, heap_limit, block)
+    child_index = target_child_index(parent_index, heap_limit, block)
 
     return if child_index.nil?
 
@@ -34,19 +34,18 @@ class Array
 
     self[parent_index] = child_value
     self[child_index] = parent_value
-    heapify_down(child_index, heap_end)
+
+    heapify_down(child_index, heap_limit, block)
   end
 
-  def target_child_index(parent_index, heap_end, block)
+  def target_child_index(parent_index, heap_limit, block)
     left_child_index = parent_index * 2 + 1
-
-    return nil if (heap_end - 1) < left_child_index
-
-    left_child_value = self[left_child_index]
+    return nil if (heap_limit - 1) < left_child_index
 
     right_child_index = left_child_index + 1
-    return left_child_index if (heap_end - 1) < right_child_index
+    return left_child_index if (heap_limit - 1) < right_child_index
 
+    left_child_value = self[left_child_index]
     right_child_value = self[right_child_index]
 
     return left_child_index if block.call(left_child_value, right_child_value)
