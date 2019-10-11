@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'benchmark'
-require_relative '../src/heap_object.rb'
-
 RSpec.describe Heap do
   let(:heap) { described_class.new }
 
@@ -166,43 +163,7 @@ RSpec.describe Heap do
   context 'with いっぱい' do
     it 'いっぱい' do
       500.times { heap.push(rand(100)) }
-      expect(heap.pop_all.each_cons(2).all? { |a, b| a <= b }).to be true
-    end
-  end
-end
-
-RSpec.configure do |config|
-  config.after(:suite) do
-    puts ''
-    COUNT = 10_000
-    items = Array.new(COUNT) { rand(COUNT) }
-    pushed_heap = Heap.new.push(*items)
-
-    Benchmark.bm(8) do |x|
-      heap = Heap.new
-      x.report('push * n') do
-        items.each { |item| heap.push(item) }
-      end
-
-      heap = Heap.new
-      x.report('push(*n)') do
-        heap.push(*items)
-      end
-
-      heap = pushed_heap.dup
-      x.report('pop * n') do
-        COUNT.times { heap.pop }
-      end
-
-      heap = pushed_heap.dup
-      x.report('pop_all') do
-        heap.pop_all
-      end
-
-      heap = pushed_heap.dup
-      x.report('to_a') do
-        heap.to_a
-      end
+      expect(heap.pop_all.each_cons(2).all? { |a, b| a <= b }).to be(true)
     end
   end
 end

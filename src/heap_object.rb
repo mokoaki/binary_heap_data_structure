@@ -35,6 +35,10 @@ class Heap
     results
   end
 
+  def [](index)
+    @heap[index]
+  end
+
   def size
     @heap.size
   end
