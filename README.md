@@ -14,14 +14,6 @@
 
 ## とりあえず基本的なバイナリヒープぽい動きをするオブジェクトを実装して遊ぶ
 
-```sh
-gem update --system
-gem update bundler
-# bundle install --path=.bundle/gems --jobs=4 --clean
-bundle install
-bundle exec rspec
-```
-
 ```ruby
 require './src/heap_object'
 
@@ -68,3 +60,12 @@ items
 - 再帰を使わないアルゴリズムがどうのこうの
   - DRYではなく、変数のスコープが広く取ってある嫌な感じがしたんで捨てました
     - でも2倍くらい早かったです
+
+## dev, test, memo
+
+```sh
+gem update --system
+gem update bundler
+bundle install --path=.bundle/gems --jobs=4 --clean
+bundle exec rspec
+```
