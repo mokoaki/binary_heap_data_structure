@@ -7,5 +7,5 @@ group :development do
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rspec', require: false
-  gem 'solargraph'
+  gem 'solargraph', require: false
 end
