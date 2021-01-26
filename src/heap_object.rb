@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# ヒープ構造を作るオブジェクト
+# ヒープ構造を保持するオブジェクト
 class Heap
   def initialize(&block)
     @heap = []

@@ -6,7 +6,7 @@ require_relative '../src/array_heap_sort'
 
 RSpec.configure do |config|
   config.after(:suite) do
-    puts ''
+    puts "Ruby#{RUBY_VERSION}"
 
     COUNT = 50_000
     random_items = Array.new(COUNT) { rand(COUNT) }
