@@ -56,16 +56,15 @@ items
 - ヒープの唯一の存在理由↓についてはヒープが早い、何十倍も早い( ･`ω･´)
   - 「優先順位が一番高い要素の参照はO(1)、popはO(log n)」
 - ソート目的でArray#heap_sortを実装してもArray#sortの方が早い、何十倍も早い(´・ω・`)
-  - ビルトインクラス先輩パねぇっす(´・ω・`)
-- 再帰を使わないアルゴリズムがどうのこうの
-  - DRYではなく、変数のスコープが広く取ってある嫌な感じがしたんで捨てました
-    - でも2倍くらい早かったです
 
-## dev, test, memo
+## memo
 
 ```sh
 gem update --system
 gem update bundler
-bundle install --path=.bundle/gems --jobs=4 --clean
+bundle config set --local jobs 4
+bundle config set --local path vendor/bundle
+bundle config set --local clean true
+bundle install
 bundle exec rspec
 ```
