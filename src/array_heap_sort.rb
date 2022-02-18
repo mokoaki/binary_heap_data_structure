@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Arrayにバイナリヒープsortメソッドを追加する
+# Arrayにheap_sortメソッドを追加する
 class Array
   def heap_sort(&block)
     dup.heap_sort!(&block)
@@ -18,8 +18,10 @@ class Array
   private
 
   def build_heep(block)
-    ((size - 2) / 2).downto(0) do |parent_index|
-      heapify_down(parent_index, size - 1, block)
+    _size = size - 1
+
+    ((_size - 1) / 2).downto(0) do |parent_index|
+      heapify_down(parent_index, _size, block)
     end
   end
 
@@ -48,17 +50,18 @@ class Array
 
   def target_child_index(parent_index, heap_limit, block)
     left_child_index = parent_index * 2 + 1
+
     return nil if heap_limit < left_child_index
 
     right_child_index = left_child_index + 1
+
     return left_child_index if heap_limit < right_child_index
 
-    left_child_value = self[left_child_index]
-    right_child_value = self[right_child_index]
-
-    return left_child_index if block.call(right_child_value, left_child_value)
-
-    right_child_index
+    if block.call(self[left_child_index], self[right_child_index])
+      right_child_index
+    else
+      left_child_index
+    end
   end
 
   def default_block

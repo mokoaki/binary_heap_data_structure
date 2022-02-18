@@ -2,18 +2,22 @@
 
 # ヒープ構造を保持するオブジェクト
 class Heap
-  def initialize(&block)
+  def initialize(*arguments, &block)
     @heap = []
     @block = block || default_block
+
+    arguments.each do |argument|
+      push(argument)
+    end
   end
 
   def push(*items)
     heap = @heap
     block = @block
 
-    items.each.with_index(size - 1) do |item, pushed_index|
+    items.each.with_index(heap.size) do |item, pushed_index|
       heap.push(item)
-      heapify_up(heap, pushed_index / 2, heap.size - 1, block)
+      heapify_up(heap, (pushed_index - 1) / 2, pushed_index, block)
     end
 
     self
@@ -23,21 +27,27 @@ class Heap
     heap = @heap
     block = @block
 
-    results = Array.new([num, size].min) do
+    results = Array.new([num, heap.size].min) do
       heap[0], heap[-1] = heap[-1], heap[0]
       result = heap.pop
       heapify_down(heap, 0, heap.size - 1, block)
       result
     end
 
-    return results.first if num < 2
-
-    results
+    if results.empty? && heap.size == 0
+      nil
+    else
+      results
+    end
   end
 
-  def [](index)
-    @heap[index]
+  def first
+    @heap[0]
   end
+
+  # def [](index)
+  #   @heap[index]
+  # end
 
   def size
     @heap.size
@@ -57,6 +67,7 @@ class Heap
     return if parent_index.negative?
 
     child_index = target_child_index(heap, parent_index, heap_limit, block)
+
     parent_value = heap[parent_index]
     child_value = heap[child_index]
 
@@ -86,9 +97,11 @@ class Heap
 
   def target_child_index(heap, parent_index, heap_limit, block)
     left_child_index = parent_index * 2 + 1
+
     return nil if heap_limit < left_child_index
 
     right_child_index = left_child_index + 1
+
     return left_child_index if heap_limit < right_child_index
 
     if block.call(heap[left_child_index], heap[right_child_index])

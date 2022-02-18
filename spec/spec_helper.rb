@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'benchmark'
-require_relative '../src/heap_object'
-require_relative '../src/array_heap_sort'
+require "benchmark"
+require_relative "../src/heap_object"
+require_relative "../src/array_heap_sort"
 
 RSpec.configure do |config|
   config.after(:suite) do
@@ -14,84 +14,90 @@ RSpec.configure do |config|
 
     Benchmark.bm(20) do |x|
       target = Heap.new
-      x.report('Heap #push * n') do
+      x.report("Heap  #push * n") do
         random_items.each { |item| target.push(item) }
       end
 
       target = Heap.new
-      x.report('Heap #push(*n)') do
+      x.report("Heap  #push(*n)") do
         target.push(*random_items)
       end
 
+      puts ""
+
       target = pushed_heap.dup
-      x.report('Heap #pop * n') do
+      x.report("Heap  #pop * n") do
         COUNT.times { target.pop }
       end
 
       target = pushed_heap.dup
-      x.report('Heap #pop_all') do
+      x.report("Heap  #pop(n)") do
+        target.pop(COUNT)
+      end
+
+      target = pushed_heap.dup
+      x.report("Heap  #pop_all") do
         target.pop_all
       end
 
       target = pushed_heap.dup
-      x.report('Heap #to_a') do
+      x.report("Heap  #to_a") do
         target.to_a
       end
 
-      target = Heap.new
-      x.report('Heap heap_sort') do
-        target.push(*random_items)
-        target.pop_all
-      end
+      puts ""
 
       target = random_items.dup
-      x.report('Array #heap_sort') do
-        target.heap_sort
-      end
-
-      target = random_items.dup
-      x.report('Array #heap_sort!') do
-        target.heap_sort!
-      end
-
-      target = random_items.dup
-      x.report('Array #sort') do
+      x.report("Array #sort") do
         target.sort
       end
 
       target = random_items.dup
-      x.report('Array #sort!') do
+      x.report("Array #heap_sort") do
+        target.heap_sort
+      end
+
+      target = random_items.dup
+      x.report("Array #sort!") do
         target.sort!
       end
 
       target = random_items.dup
-      x.report('Array min pop') do
-        500.times do
+      x.report("Array #heap_sort!") do
+        target.heap_sort!
+      end
+
+      puts ""
+
+      target = random_items.dup
+      x.report("Array min pop") do
+        COUNT.times do
           target.delete_at(target.index(target.min))
         end
       end
 
       target = pushed_heap.dup
-      x.report('Heap pop') do
-        500.times do
-          target.push(rand(COUNT))
+      x.report("Heap  min pop") do
+        COUNT.times do
           target.pop
         end
       end
 
+      puts ""
+
       target = []
-      x.report('Array find min') do
-        random_items[0, 3000].each do |item|
+      x.report("Array find min") do
+        random_items.each do |item|
           target.push(item)
           target.min
         end
       end
 
       target = Heap.new
-      x.report('Heap find min') do
-        random_items[0, 3000].each do |item|
+      x.report("Heap  find min") do
+        random_items.each do |item|
           target.push(item)
-          target[0]
+          target.first
         end
       end
     end
