@@ -3,17 +3,33 @@ require:
   - rubocop-rspec
 
 AllCops:
-  TargetRubyVersion: 2.6
+  DisplayCopNames: true
+  NewCops: enable
+  TargetRubyVersion: 3.1
 
-  # チェック対象外
   Exclude:
+    - .git/**/*
     - .bundle/**/*
+    - bin/**/*
+    - vendor/**/*
+    - tmp/**/*
+
+# ドキュメントの無い public class を許可する
+Style/Documentation:
+  Enabled: false
+
+Layout/EndOfLine:
+  EnforcedStyle: lf
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
 
 # コメントはASCII文字で記述 => disable
 Style/AsciiComments:
   Enabled: false
 
-# ['a', 'b', 'c'] は %w表記にて記述 => disable
+# ["a", "b", "c"] は %w表記にて記述 => disable
 Style/WordArray:
   Enabled: false
 
@@ -21,17 +37,21 @@ Style/WordArray:
 Style/SymbolArray:
   Enabled: false
 
-# Style/Documentation:
-#   Exclude:
-#     - spec/**/*
-
-Metrics/BlockLength:
-  Exclude:
-    - spec/**/*
-
-# Metrics/LineLength:
-#   Exclude:
-#     - spec/**/*
+# Layout/LineLength:
+#   Max: 80
 
 # RSpec/ContextWording:
 #   Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
+
+Metrics/BlockLength:
+ Exclude:
+   - "spec/**/*"
