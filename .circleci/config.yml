@@ -2,12 +2,31 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: ruby:3.1.0
+      - image: cimg/ruby:3.1
     steps:
       - checkout
+      - restore_cache:
+          key: gem-cache-v1-{{ arch }}-{{ checksum "Gemfile.lock" }}
+      # - run:
+      #     name: info
+      #     command: |
+      #       ruby -v
+      #       gem environment gemdir
+      #       gem environment
       - run:
-          name: Run the default task
+          name: bundler
           command: |
-            gem install bundler -v 2.3.7
-            bundle install
+            sudo gem update --system --no-document
+            bundle config set --local jobs 4
+            bundle config set --local retry 3
+            bundle check || bundle install
+      - save_cache:
+          key: gem-cache-v1-{{ arch }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - /home/circleci/.rubygems
+            # - /home/circleci/.local/share/gem/ruby/3.1.0/rubygems
+            # - /usr/local/lib/ruby/gems/3.1.0/rubygems
+      - run:
+          name: rspec
+          command: |
             bundle exec rspec
